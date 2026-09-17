@@ -1,0 +1,892 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Task Hub</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body {
+            font-family: Inter, Arial, sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .task-card {
+            transition: all 0.25s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- ================= HEADER ================= -->
+    <header class="sticky top-0 z-50 glass border-b border-slate-200">
+
+        <div class="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+
+            <div class="flex items-center gap-3">
+
+                <div
+                    class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center text-white text-xl shadow-lg">
+                    📚
+                </div>
+
+                <div>
+                    <h1 class="font-bold text-lg">
+                        Student <span class="gradient-text">Task Hub</span>
+                    </h1>
+
+                    <p class="text-xs text-slate-500">
+                        Personal Assignment Repository
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="hidden md:block text-sm text-slate-500">
+                S1 Teknik Informatika
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+    <main class="max-w-6xl mx-auto px-5 py-8">
+
+
+        <!-- ================= HERO ================= -->
+        <section class="mb-8">
+
+            <div
+                class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-700 via-indigo-700 to-violet-700 p-7 md:p-10 text-white shadow-xl">
+
+                <!-- Decorative circle -->
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full"></div>
+                <div class="absolute -right-10 -bottom-32 w-72 h-72 bg-white/10 rounded-full"></div>
+
+                <div class="relative z-10 max-w-2xl">
+
+                    <p class="text-blue-100 text-sm font-medium mb-2">
+                        👋 Welcome to your workspace
+                    </p>
+
+                    <h2 class="text-3xl md:text-4xl font-bold leading-tight mb-3">
+                        Kelola semua tugas kuliah
+                        <br>
+                        dalam satu tempat.
+                    </h2>
+
+                    <p class="text-blue-100 max-w-xl">
+                        Simpan, upload, dan pantau tugas kuliah dengan lebih rapi
+                        tanpa perlu mencari file di berbagai folder.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= STATISTICS ================= -->
+        <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+
+            <!-- Total -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+
+                <div class="flex items-center justify-between">
+
+                    <div>
+                        <p class="text-sm text-slate-500">
+                            Total Tugas
+                        </p>
+
+                        <p id="totalTugas" class="text-3xl font-bold mt-1">
+                            0
+                        </p>
+                    </div>
+
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-xl">
+                        📚
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Deadline -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+
+                <div class="flex items-center justify-between">
+
+                    <div>
+                        <p class="text-sm text-slate-500">
+                            Deadline Terdekat
+                        </p>
+
+                        <p id="deadlineTerdekat" class="text-lg font-bold mt-2">
+                            -
+                        </p>
+                    </div>
+
+                    <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-xl">
+                        ⏰
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Status -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+
+                <div class="flex items-center justify-between">
+
+                    <div>
+                        <p class="text-sm text-slate-500">
+                            Repository
+                        </p>
+
+                        <p class="text-lg font-bold mt-2 text-emerald-600">
+                            Online
+                        </p>
+                    </div>
+
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-xl">
+                        ☁️
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= FORM ================= -->
+        <section class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden mb-10">
+
+            <div class="p-6 border-b border-slate-200">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                        ➕
+                    </div>
+
+                    <div>
+                        <h2 class="text-xl font-bold">
+                            Tambah Tugas
+                        </h2>
+
+                        <p class="text-sm text-slate-500">
+                            Upload tugas baru ke repository
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <form id="tugasForm" class="p-6 space-y-5">
+
+                <!-- Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                    <div>
+
+                        <label class="block text-sm font-semibold mb-2">
+                            Judul Tugas
+                        </label>
+
+                        <input type="text" id="judul" required placeholder="Contoh: Implementasi Algoritma BFS"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition">
+
+                    </div>
+
+
+                    <div>
+
+                        <label class="block text-sm font-semibold mb-2">
+                            Mata Kuliah
+                        </label>
+
+                        <input type="text" id="matakuliah" required placeholder="Contoh: Strategi Algoritma"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                    <div>
+
+                        <label class="block text-sm font-semibold mb-2">
+                            Deadline
+                        </label>
+
+                        <input type="date" id="deadline" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition">
+
+                    </div>
+
+
+                    <div>
+
+                        <label class="block text-sm font-semibold mb-2">
+                            File Tugas
+                        </label>
+
+                        <input type="file" id="file_tugas" required
+                            class="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white">
+
+                        <p class="text-xs text-slate-400 mt-1">
+                            PDF, JPG, PNG, ZIP, DOCX, dll.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Description -->
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2">
+                        Deskripsi / Catatan
+                    </label>
+
+                    <textarea id="deskripsi" rows="3" placeholder="Tambahkan catatan mengenai tugas..."
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition resize-none"></textarea>
+
+                </div>
+
+
+                <!-- Button -->
+                <button type="submit" id="submitBtn"
+                    class="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 text-white font-semibold shadow-lg shadow-blue-200 hover:shadow-xl hover:-translate-y-0.5 transition">
+                    🚀 Simpan & Upload Tugas
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- ================= TASK LIST ================= -->
+        <section>
+
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+
+                <div>
+                    <h2 class="text-2xl font-bold">
+                        Daftar Tugas
+                    </h2>
+
+                    <p class="text-sm text-slate-500 mt-1">
+                        Semua tugas yang tersimpan di repository
+                    </p>
+                </div>
+
+
+                <!-- Search -->
+                <div class="relative">
+
+                    <span class="absolute left-4 top-3 text-slate-400">
+                        🔍
+                    </span>
+
+                    <input type="text" id="searchInput" placeholder="Cari tugas..."
+                        class="pl-11 pr-4 py-3 w-full md:w-64 rounded-xl border border-slate-300 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+
+                </div>
+
+            </div>
+
+
+            <!-- Task Container -->
+            <div id="tugasContainer" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <div class="col-span-full text-center py-12 text-slate-400">
+                    Memuat data tugas...
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="border-t border-slate-200 mt-12">
+
+        <div class="max-w-6xl mx-auto px-5 py-6 text-center">
+
+            <p class="text-sm text-slate-500">
+                © 2026 Student Task Hub
+            </p>
+
+            <p class="text-xs text-slate-400 mt-1">
+                Personal Repository • Teknik Informatika
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        // ==========================================
+        // SUPABASE CONFIGURATION
+        // ==========================================
+
+        const SUPABASE_URL =
+            'https://iwtckdalxyrepkechioj.supabase.co/rest/v1/';
+
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3dGNrZGFseHlyZXBrZWNoaW9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2NDEwODYsImV4cCI6MjEwNTIxNzA4Nn0.PgNKaNU7GTkV7bkCdy-3pTqT_Z_JKxlI4qARxN5eZAs';
+        const supabase =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_ANON_KEY
+            );
+
+
+        // ==========================================
+        // ELEMENT
+        // ==========================================
+
+        const form =
+            document.getElementById('tugasForm');
+
+        const container =
+            document.getElementById('tugasContainer');
+
+        const submitBtn =
+            document.getElementById('submitBtn');
+
+        const searchInput =
+            document.getElementById('searchInput');
+
+
+        let semuaTugas = [];
+
+
+        // ==========================================
+        // LOAD DATA
+        // ==========================================
+
+        async function loadTugas() {
+
+            const { data, error } =
+                await supabase
+                    .from('tugas')
+                    .select('*')
+                    .order('deadline', {
+                        ascending: true
+                    });
+
+
+            if (error) {
+
+                console.error(error);
+
+                container.innerHTML = `
+          <div class="col-span-full bg-red-50 border border-red-200 rounded-2xl p-6 text-center text-red-600">
+            ❌ Gagal memuat data tugas.
+          </div>
+        `;
+
+                return;
+            }
+
+
+            semuaTugas = data || [];
+
+
+            tampilkanTugas(semuaTugas);
+
+            updateStatistics(semuaTugas);
+
+        }
+
+
+        // ==========================================
+        // DISPLAY TASK
+        // ==========================================
+
+        function tampilkanTugas(data) {
+
+            if (data.length === 0) {
+
+                container.innerHTML = `
+          <div class="col-span-full bg-white border border-slate-200 rounded-2xl p-10 text-center">
+
+            <div class="text-5xl mb-4">
+              📭
+            </div>
+
+            <h3 class="font-semibold text-lg">
+              Belum ada tugas
+            </h3>
+
+            <p class="text-sm text-slate-500 mt-1">
+              Tambahkan tugas pertama kamu melalui form di atas.
+            </p>
+
+          </div>
+        `;
+
+                return;
+            }
+
+
+            container.innerHTML = '';
+
+
+            data.forEach(item => {
+
+                const card =
+                    document.createElement('div');
+
+
+                card.className =
+                    'task-card bg-white border border-slate-200 rounded-2xl p-5 shadow-sm';
+
+
+                const today =
+                    new Date();
+
+                const deadline =
+                    new Date(item.deadline);
+
+
+                let statusText =
+                    item.status || 'Belum Selesai';
+
+                let statusClass =
+                    'bg-amber-100 text-amber-700';
+
+
+                if (deadline < today) {
+
+                    statusText =
+                        'Terlambat';
+
+                    statusClass =
+                        'bg-red-100 text-red-700';
+
+                }
+
+
+                card.innerHTML = `
+
+          <div class="flex items-start justify-between gap-3">
+
+            <div class="flex gap-3">
+
+              <div class="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center text-lg">
+                📄
+              </div>
+
+              <div>
+
+                <h3 class="font-bold text-slate-800">
+                  ${escapeHTML(item.judul)}
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-1">
+                  ${escapeHTML(item.matakuliah)}
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusClass}">
+              ${statusText}
+            </span>
+
+          </div>
+
+
+          <div class="mt-5 grid grid-cols-2 gap-3">
+
+            <div class="bg-slate-50 rounded-xl p-3">
+
+              <p class="text-xs text-slate-400">
+                Deadline
+              </p>
+
+              <p class="text-sm font-semibold mt-1">
+                ${formatTanggal(item.deadline)}
+              </p>
+
+            </div>
+
+
+            <div class="bg-slate-50 rounded-xl p-3">
+
+              <p class="text-xs text-slate-400">
+                File
+              </p>
+
+              <p class="text-sm font-semibold mt-1 truncate">
+                ${escapeHTML(item.file_name || 'File tugas')}
+              </p>
+
+            </div>
+
+          </div>
+
+
+          ${item.deskripsi
+                        ? `
+                <p class="text-sm text-slate-500 mt-4 line-clamp-2">
+                  ${escapeHTML(item.deskripsi)}
+                </p>
+              `
+                        : ''
+                    }
+
+
+          <div class="mt-5 pt-4 border-t border-slate-100">
+
+            <a
+              href="${item.file_url}"
+              target="_blank"
+              class="block text-center py-2.5 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-blue-600 transition"
+            >
+              👁️ Buka File Tugas
+            </a>
+
+          </div>
+
+        `;
+
+
+                container.appendChild(card);
+
+            });
+
+        }
+
+
+        // ==========================================
+        // STATISTICS
+        // ==========================================
+
+        function updateStatistics(data) {
+
+            document.getElementById('totalTugas')
+                .textContent = data.length;
+
+
+            if (data.length > 0) {
+
+                document.getElementById('deadlineTerdekat')
+                    .textContent =
+                    formatTanggal(data[0].deadline);
+
+            }
+
+        }
+
+
+        // ==========================================
+        // UPLOAD TASK
+        // ==========================================
+
+        form.addEventListener(
+            'submit',
+            async function (e) {
+
+                e.preventDefault();
+
+
+                submitBtn.disabled = true;
+
+                submitBtn.textContent =
+                    '⏳ Mengunggah...';
+
+
+                const judul =
+                    document.getElementById('judul').value.trim();
+
+                const matakuliah =
+                    document.getElementById('matakuliah').value.trim();
+
+                const deadline =
+                    document.getElementById('deadline').value;
+
+                const deskripsi =
+                    document.getElementById('deskripsi').value.trim();
+
+                const fileInput =
+                    document.getElementById('file_tugas');
+
+                const file =
+                    fileInput.files[0];
+
+
+                if (!file) {
+
+                    alert(
+                        'Silakan pilih file tugas terlebih dahulu.'
+                    );
+
+                    resetButton();
+
+                    return;
+
+                }
+
+
+                try {
+
+                    // ====================================
+                    // CREATE UNIQUE FILE NAME
+                    // ====================================
+
+                    const fileExt =
+                        file.name
+                            .split('.')
+                            .pop();
+
+
+                    const fileName =
+                        `${Date.now()}_${Math.random()
+                            .toString(36)
+                            .substring(2, 8)}.${fileExt}`;
+
+
+                    // ====================================
+                    // UPLOAD STORAGE
+                    // ====================================
+
+                    const {
+                        error: storageError
+                    } =
+                        await supabase.storage
+                            .from('tugas-bucket')
+                            .upload(
+                                fileName,
+                                file
+                            );
+
+
+                    if (storageError) {
+
+                        throw storageError;
+
+                    }
+
+
+                    // ====================================
+                    // PUBLIC URL
+                    // ====================================
+
+                    const {
+                        data: urlData
+                    } =
+                        supabase.storage
+                            .from('tugas-bucket')
+                            .getPublicUrl(fileName);
+
+
+                    const publicUrl =
+                        urlData.publicUrl;
+
+
+                    // ====================================
+                    // INSERT DATABASE
+                    // ====================================
+
+                    const {
+                        error: dbError
+                    } =
+                        await supabase
+                            .from('tugas')
+                            .insert([
+
+                                {
+                                    judul: judul,
+                                    matakuliah: matakuliah,
+                                    deadline: deadline,
+                                    deskripsi: deskripsi,
+                                    file_name: file.name,
+                                    file_url: publicUrl
+                                }
+
+                            ]);
+
+
+                    if (dbError) {
+
+                        throw dbError;
+
+                    }
+
+
+                    alert(
+                        '✅ Tugas berhasil diupload!'
+                    );
+
+
+                    form.reset();
+
+                    await loadTugas();
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    alert(
+                        '❌ Terjadi kesalahan: ' +
+                        error.message
+                    );
+
+                }
+
+
+                resetButton();
+
+            }
+        );
+
+
+        // ==========================================
+        // SEARCH
+        // ==========================================
+
+        searchInput.addEventListener(
+            'input',
+            function () {
+
+                const keyword =
+                    this.value.toLowerCase();
+
+
+                const hasil =
+                    semuaTugas.filter(item =>
+
+                        item.judul
+                            .toLowerCase()
+                            .includes(keyword)
+
+                        ||
+
+                        item.matakuliah
+                            .toLowerCase()
+                            .includes(keyword)
+
+                    );
+
+
+                tampilkanTugas(hasil);
+
+            }
+        );
+
+
+        // ==========================================
+        // HELPER
+        // ==========================================
+
+        function formatTanggal(tanggal) {
+
+            if (!tanggal)
+                return '-';
+
+
+            const date =
+                new Date(tanggal);
+
+
+            return date.toLocaleDateString(
+                'id-ID',
+                {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                }
+            );
+
+        }
+
+
+        function escapeHTML(text) {
+
+            if (!text)
+                return '';
+
+
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+
+        }
+
+
+        function resetButton() {
+
+            submitBtn.disabled = false;
+
+            submitBtn.textContent =
+                '🚀 Simpan & Upload Tugas';
+
+        }
+
+
+        // ==========================================
+        // INITIAL LOAD
+        // ==========================================
+
+        loadTugas();
+
+    </script>
+
+</body>
+
+</html>
+```
